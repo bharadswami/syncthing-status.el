@@ -22,8 +22,8 @@
 (require 'request)
 (require 'json)
 
-(defgroup syncthing-status syncthing-status ()
-  "Show Syncthing status")
+(defgroup syncthing-status ()
+  "Show Syncthing status.")
 
 (defcustom syncthing-url "http://localhost:8384"
   "URL of Syncthing GUI.  Default is localhost:8384."
