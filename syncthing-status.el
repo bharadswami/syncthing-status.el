@@ -44,7 +44,7 @@
             units (cdr units)))
     (format "%.2f %s" size (car units))))
 
-(defun get-sync-status-of-element (id folderp &optional name)
+(defun syncthing-status-for-element (id folderp &optional name)
   "Get the syncthing status of item ID.
 Set FOLDERP to t if ID refers to a folder,
 otherwise it is assumed as a device id.
@@ -93,7 +93,7 @@ Optional parameter NAME to easily identify element."
                 (dotimes (fol (length data))
                   (let ((folderid (assoc-default 'id (aref data fol)))
                         (foldername (assoc-default 'label (aref data fol))))
-                    (get-sync-status-of-element folderid 1 foldername))))))
+                    (syncthing-status-for-element folderid 1 foldername))))))
 
   (with-current-buffer (get-buffer-create "*syncthing-status*")
     (insert (format "\n%s:\n" (propertize "Devices" 'face 'underline))))
@@ -107,8 +107,8 @@ Optional parameter NAME to easily identify element."
 			    (dotimes (dev (length data))
 			      (let ((deviceid (assoc-default 'deviceID (aref data dev)))
 				    (devicename (assoc-default 'name (aref data dev))))
-				(get-sync-status-of-element deviceid nil devicename)
-                     )))))
+				(syncthing-status-for-element deviceid nil devicename)
+                                )))))
   (pop-to-buffer "*syncthing-status*"))
 
 (provide 'syncthing-status)
