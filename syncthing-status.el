@@ -42,7 +42,7 @@
 Set FOLDERP to t if ID refers to a folder,
 otherwise it is assumed as a device id.
 Optional parameter NAME to easily identify element."
-(request (url-encode-url (format "%s/rest/db/completion?%s=%s" syncthing-url (if folder-p "folder" "device") id))
+(request (url-encode-url (format "%s/rest/db/completion?%s=%s" syncthing-url (if folderp "folder" "device") id))
   :sync t
   :headers `(("X-API-KEY" . ,api-key))
   :parser 'json-read
