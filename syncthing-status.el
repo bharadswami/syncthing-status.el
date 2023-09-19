@@ -49,7 +49,7 @@
 Set FOLDERP to t if ID refers to a folder,
 otherwise it is assumed as a device id.
 Optional parameter NAME to easily identify element."
-  (request (url-encode-url (format "%s/rest/db/completion?%s=%s" syncthing-url (if folderp "folder" "device") id))
+  (request (url-encode-url (format "%s/rest/db/completion?%s=%s" syncthing-status-url (if folderp "folder" "device") id))
     :sync t
     :headers `(("X-API-KEY" . ,syncthing-status-api-key))
     :parser 'json-read
@@ -72,7 +72,7 @@ Optional parameter NAME to easily identify element."
   (with-current-buffer (get-buffer-create "*syncthing-status*")
     (erase-buffer)
     ;; Add syncthing logo
-    (request (url-encode-url (format "%s/assets/img/logo-horizontal.svg" syncthing-url))
+    (request (url-encode-url (format "%s/assets/img/logo-horizontal.svg" syncthing-status-url))
       :timeout 5
       :sync t
       :error (cl-function (lambda (&rest args &allow-other-keys)
@@ -84,7 +84,7 @@ Optional parameter NAME to easily identify element."
     (insert (format "\n%s:\n" (propertize "Folders" 'face 'underline))))
 
   ;; Get sync status of all folders
-  (request (url-encode-url (format "%s/rest/config/folders" syncthing-url))
+  (request (url-encode-url (format "%s/rest/config/folders" syncthing-status-url))
     :sync t
     :headers `(("X-API-KEY" . ,syncthing-status-api-key))
     :parser 'json-read
@@ -98,7 +98,7 @@ Optional parameter NAME to easily identify element."
     (insert (format "\n%s:\n" (propertize "Devices" 'face 'underline))))
 
   ;; Get sync status of all devices
-  (request (url-encode-url (format "%s/rest/config/devices" syncthing-url))
+  (request (url-encode-url (format "%s/rest/config/devices" syncthing-status-url))
     :sync t
     :headers `(("X-API-KEY" . ,syncthing-status-api-key))
     :parser 'json-read
