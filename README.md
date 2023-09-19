@@ -3,7 +3,7 @@ Elisp to quickly get sync status of folders and devices on Syncthing. Uses the [
 
 ## Usage
 ### Step 1: Installation
-You can clone/download this repository and paste `(load-file "/path/to/syncthing-status.el")` in your init file or copy the contents of `syncthing-status.el` to your init file.
+You can clone/download this repository and paste `(load "/path/to/syncthing-status.el")` in your init file or copy the contents of `syncthing-status.el` to your init file.
 (init file = `~/.emacs.el`, `~/.emacs`, `~/.emacs.d/init.el`, `~/.config/emacs/init.el`, `~/.spacemacs`, `~/.doom.d/config.el` etc.)
 
 ### Step 2: API Key
