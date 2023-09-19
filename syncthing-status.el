@@ -24,7 +24,7 @@
 (defcustom syncthing-url "http://localhost:8384"
   "URL of Syncthing GUI. Default is localhost:8384."
   :type '(string))
-(defcustom api-key nil
+(defcustom syncthing-api-key nil
   "Syncthing API key. Find in GUI under Actions > Settings > General."
   :type '(string))
 
