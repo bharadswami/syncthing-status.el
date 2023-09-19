@@ -15,7 +15,7 @@
 ;; folders and devices on Syncthing.  Run the function
 ;; (syncthing-status) or bind it to a convenient keybinding
 ;; to quickly pull up a buffer that shows the sync percentage
-;; and the number of files and bytes out of sync
+;; and the number of files and bytes out of sync.
 
 ;;; Code:
 
@@ -57,8 +57,7 @@ Optional parameter NAME to easily identify element."
 				       (format (propertize " (%d items, %s out of sync)" 'face '(:foreground "#dd3333"))
 					       out-sync-items-num
 					       (bytes-to-human-readable out-of-sync-bytes))
-				     " ✅"
-				     )))))))))
+				     " ✅")))))))))
 
 (defun syncthing-status ()
    "Get syncthing sync status of all folders and devices."
@@ -73,8 +72,7 @@ Optional parameter NAME to easily identify element."
 			     (insert "+-----------------------+\n| Syncthing sync status |\n+-----------------------+\n")))
        :success (cl-function (lambda (&key data &allow-other-keys)
 			       (insert-image (create-image data nil 1))
-			       (insert "\n")
-                           )))
+			       (insert "\n"))))
 
      (insert (format "\n%s:\n" (propertize "Folders" 'face 'underline))))
 
@@ -88,10 +86,7 @@ Optional parameter NAME to easily identify element."
                 (dotimes (fol (length data))
                   (let ((folderid (assoc-default 'id (aref data fol)))
                         (foldername (assoc-default 'label (aref data fol))))
-                    (get-sync-status-of-element folderid 1 foldername)
-                    )
-                        )
-                )))
+                    (get-sync-status-of-element folderid 1 foldername))))))
 
   (with-current-buffer (get-buffer-create "*syncthing-status*")
     (insert (format "\n%s:\n" (propertize "Devices" 'face 'underline))))
