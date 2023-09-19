@@ -53,18 +53,18 @@ Optional parameter NAME to easily identify element."
     :sync t
     :headers `(("X-API-KEY" . ,syncthing-status-api-key))
     :parser 'json-read
-    :complete (lambda (&key data &allow-other-keys)
-                (with-current-buffer (get-buffer-create "*syncthing-status*")
-                  (insert (format "%s: %g%% synced%s\n"
-				  (propertize (or name id) 'face 'bold)
-				  (assoc-default 'completion data)
-				  (let ((out-sync-items-num (assoc-default 'needItems data))
-				        (out-of-sync-bytes (assoc-default 'needBytes data)))
-				    (if (> out-sync-items-num 0)
-				        (format (propertize " (%d items, %s out of sync)" 'face '(:foreground "#dd3333"))
-					        out-sync-items-num
-					        (syncthing-status-bytes-to-human-readable out-of-sync-bytes))
-				      " ✅"))))))))
+    :complete (cl-function (lambda (&key data &allow-other-keys)
+                             (with-current-buffer (get-buffer-create "*syncthing-status*")
+                               (insert (format "%s: %g%% synced%s\n"
+				               (propertize (or name id) 'face 'bold)
+				               (assoc-default 'completion data)
+				               (let ((out-sync-items-num (assoc-default 'needItems data))
+				                     (out-of-sync-bytes (assoc-default 'needBytes data)))
+				                 (if (> out-sync-items-num 0)
+				                     (format (propertize " (%d items, %s out of sync)" 'face '(:foreground "#dd3333"))
+					                     out-sync-items-num
+					                     (syncthing-status-bytes-to-human-readable out-of-sync-bytes))
+				                   " ✅")))))))))
 
 (defun syncthing-status ()
   "Get syncthing sync status of all folders and devices."
@@ -88,11 +88,11 @@ Optional parameter NAME to easily identify element."
     :sync t
     :headers `(("X-API-KEY" . ,syncthing-status-api-key))
     :parser 'json-read
-    :success (lambda (&key data &allow-other-keys)
-               (dotimes (fol (length data))
-                 (let ((folderid (assoc-default 'id (aref data fol)))
-                       (foldername (assoc-default 'label (aref data fol))))
-                   (syncthing-status-for-element folderid 1 foldername)))))
+    :success (cl-function (lambda (&key data &allow-other-keys)
+                            (dotimes (fol (length data))
+                              (let ((folderid (assoc-default 'id (aref data fol)))
+                                    (foldername (assoc-default 'label (aref data fol))))
+                                (syncthing-status-for-element folderid 1 foldername))))))
 
   (with-current-buffer (get-buffer-create "*syncthing-status*")
     (insert (format "\n%s:\n" (propertize "Devices" 'face 'underline))))
@@ -102,11 +102,11 @@ Optional parameter NAME to easily identify element."
     :sync t
     :headers `(("X-API-KEY" . ,syncthing-status-api-key))
     :parser 'json-read
-    :success (lambda (&key data &allow-other-keys)
-	       (dotimes (dev (length data))
-		 (let ((deviceid (assoc-default 'deviceID (aref data dev)))
-		       (devicename (assoc-default 'name (aref data dev))))
-		   (syncthing-status-for-element deviceid nil devicename)))))
+    :success (cl-function (lambda (&key data &allow-other-keys)
+	                    (dotimes (dev (length data))
+		              (let ((deviceid (assoc-default 'deviceID (aref data dev)))
+		                    (devicename (assoc-default 'name (aref data dev))))
+		                (syncthing-status-for-element deviceid nil devicename))))))
   (pop-to-buffer "*syncthing-status*"))
 
 (provide 'syncthing-status)
