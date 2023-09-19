@@ -35,7 +35,7 @@
   :type '(string)
   :group 'syncthing-status)
 
-(defun bytes-to-human-readable (bytes)
+(defun syncthing-status-bytes-to-human-readable (bytes)
   "Convert the given number of BYTES to a human-friendly format."
   (let ((units '("B" "KiB" "MiB" "GiB"))
         (size bytes))
@@ -49,39 +49,39 @@
 Set FOLDERP to t if ID refers to a folder,
 otherwise it is assumed as a device id.
 Optional parameter NAME to easily identify element."
-(request (url-encode-url (format "%s/rest/db/completion?%s=%s" syncthing-url (if folderp "folder" "device") id))
-  :sync t
-  :headers `(("X-API-KEY" . ,api-key))
-  :parser 'json-read
-  :complete (cl-function (lambda (&key data &allow-other-keys)
-               (with-current-buffer (get-buffer-create "*syncthing-status*")
-                 (insert (format "%s: %g%% synced%s\n"
-				 (propertize (or name id) 'face 'bold)
-				 (assoc-default 'completion data)
-				 (let ((out-sync-items-num (assoc-default 'needItems data))
-				       (out-of-sync-bytes (assoc-default 'needBytes data)))
-				   (if (> out-sync-items-num 0)
-				       (format (propertize " (%d items, %s out of sync)" 'face '(:foreground "#dd3333"))
-					       out-sync-items-num
-					       (bytes-to-human-readable out-of-sync-bytes))
-				     " ✅")))))))))
+  (request (url-encode-url (format "%s/rest/db/completion?%s=%s" syncthing-url (if folderp "folder" "device") id))
+    :sync t
+    :headers `(("X-API-KEY" . ,api-key))
+    :parser 'json-read
+    :complete (lambda (&key data &allow-other-keys)
+                (with-current-buffer (get-buffer-create "*syncthing-status*")
+                  (insert (format "%s: %g%% synced%s\n"
+				  (propertize (or name id) 'face 'bold)
+				  (assoc-default 'completion data)
+				  (let ((out-sync-items-num (assoc-default 'needItems data))
+				        (out-of-sync-bytes (assoc-default 'needBytes data)))
+				    (if (> out-sync-items-num 0)
+				        (format (propertize " (%d items, %s out of sync)" 'face '(:foreground "#dd3333"))
+					        out-sync-items-num
+					        (syncthing-status-bytes-to-human-readable out-of-sync-bytes))
+				      " ✅"))))))))
 
 (defun syncthing-status ()
-   "Get syncthing sync status of all folders and devices."
-   (interactive)
-   (with-current-buffer (get-buffer-create "*syncthing-status*")
-     (erase-buffer)
-     ;; Add syncthing logo
-     (request (url-encode-url (format "%s/assets/img/logo-horizontal.svg" syncthing-url))
-       :timeout 5
-       :sync t
-       :error (cl-function (lambda (&rest args &allow-other-keys)
-			     (insert "+-----------------------+\n| Syncthing sync status |\n+-----------------------+\n")))
-       :success (cl-function (lambda (&key data &allow-other-keys)
-			       (insert-image (create-image data nil 1))
-			       (insert "\n"))))
+  "Get syncthing sync status of all folders and devices."
+  (interactive)
+  (with-current-buffer (get-buffer-create "*syncthing-status*")
+    (erase-buffer)
+    ;; Add syncthing logo
+    (request (url-encode-url (format "%s/assets/img/logo-horizontal.svg" syncthing-url))
+      :timeout 5
+      :sync t
+      :error (cl-function (lambda (&rest args &allow-other-keys)
+			    (insert "+-----------------------+\n| Syncthing sync status |\n+-----------------------+\n")))
+      :success (cl-function (lambda (&key data &allow-other-keys)
+			      (insert-image (create-image data nil 1))
+			      (insert "\n"))))
 
-     (insert (format "\n%s:\n" (propertize "Folders" 'face 'underline))))
+    (insert (format "\n%s:\n" (propertize "Folders" 'face 'underline))))
 
   ;; Get sync status of all folders
   (request (url-encode-url (format "%s/rest/config/folders" syncthing-url))
