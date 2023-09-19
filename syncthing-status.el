@@ -21,12 +21,18 @@
 
 (require 'request)
 
+(defgroup syncthing-status syncthing-status ()
+  "Show Syncthing status")
+
 (defcustom syncthing-url "http://localhost:8384"
-  "URL of Syncthing GUI. Default is localhost:8384."
-  :type '(string))
+  "URL of Syncthing GUI.  Default is localhost:8384."
+  :type '(string)
+  :group 'syncthing-status)
+
 (defcustom syncthing-api-key nil
-  "Syncthing API key. Find in GUI under Actions > Settings > General."
-  :type '(string))
+  "Syncthing API key.  Find in GUI under Actions > Settings > General."
+  :type '(string)
+  :group 'syncthing-status)
 
 (defun bytes-to-human-readable (bytes)
   "Convert the given number of BYTES to a human-friendly format."
