@@ -104,4 +104,6 @@ Optional parameter NAME to easily identify element."
                      )))))
   (pop-to-buffer "*syncthing-status*"))
 
+(provide 'syncthing-status)
+
 ;;; syncthing-status.el ends here
