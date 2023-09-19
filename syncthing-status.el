@@ -5,7 +5,7 @@
 ;;; Author: Bharadwaj Swaminathan
 ;;; Keywords: syncthing
 ;;; URL: https://github.com/bharadswami/syncthing-status.el
-;;; Package-Requires: (request)
+;;; Package-Requires: (request (emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -20,6 +20,7 @@
 ;;; Code:
 
 (require 'request)
+(require 'json)
 
 (defgroup syncthing-status syncthing-status ()
   "Show Syncthing status")
