@@ -25,12 +25,12 @@
 (defgroup syncthing-status ()
   "Show Syncthing status.")
 
-(defcustom syncthing-url "http://localhost:8384"
+(defcustom syncthing-status-url "http://localhost:8384"
   "URL of Syncthing GUI.  Default is localhost:8384."
   :type '(string)
   :group 'syncthing-status)
 
-(defcustom syncthing-api-key nil
+(defcustom syncthing-status-api-key nil
   "Syncthing API key.  Find in GUI under Actions > Settings > General."
   :type '(string)
   :group 'syncthing-status)
@@ -51,7 +51,7 @@ otherwise it is assumed as a device id.
 Optional parameter NAME to easily identify element."
   (request (url-encode-url (format "%s/rest/db/completion?%s=%s" syncthing-url (if folderp "folder" "device") id))
     :sync t
-    :headers `(("X-API-KEY" . ,api-key))
+    :headers `(("X-API-KEY" . ,syncthing-status-api-key))
     :parser 'json-read
     :complete (lambda (&key data &allow-other-keys)
                 (with-current-buffer (get-buffer-create "*syncthing-status*")
@@ -86,7 +86,7 @@ Optional parameter NAME to easily identify element."
   ;; Get sync status of all folders
   (request (url-encode-url (format "%s/rest/config/folders" syncthing-url))
     :sync t
-    :headers `(("X-API-KEY" . ,api-key))
+    :headers `(("X-API-KEY" . ,syncthing-status-api-key))
     :parser 'json-read
     :success (lambda (&key data &allow-other-keys)
                (dotimes (fol (length data))
@@ -100,7 +100,7 @@ Optional parameter NAME to easily identify element."
   ;; Get sync status of all devices
   (request (url-encode-url (format "%s/rest/config/devices" syncthing-url))
     :sync t
-    :headers `(("X-API-KEY" . ,api-key))
+    :headers `(("X-API-KEY" . ,syncthing-status-api-key))
     :parser 'json-read
     :success (lambda (&key data &allow-other-keys)
 	       (dotimes (dev (length data))
